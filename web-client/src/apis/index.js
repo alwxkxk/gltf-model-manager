@@ -1,7 +1,10 @@
 import axios from 'axios'
 
+if(!process.env.REACT_APP_SERVER_URL){
+    console.error('请检查.env文件，是否含后端URL配置REACT_APP_SERVER_URL')
+}
 const instance = axios.create({
-    baseURL: "http://127.0.0.1:8080",
+    baseURL: process.env.REACT_APP_SERVER_URL,
     withCredentials: false,
     headers: {
       'Access-Control-Allow-Origin' : '*',

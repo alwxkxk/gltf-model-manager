@@ -3,6 +3,7 @@ import axios from '../apis/index'
 import {greetUlr} from '../apis/urls'
 
 const getGreet = ()=>{
+    // console.log('process.env',process.env)
     axios.get(greetUlr)
 }
 
