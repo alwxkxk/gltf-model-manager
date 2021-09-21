@@ -1,11 +1,11 @@
-import { Tabs  } from 'antd';
-import GreetTest from './components/GreetTest';
-import ModelViewer from './pages/model-viewer';
-import 'antd/dist/antd.css';
-import './App.css';
+import { Tabs } from 'antd'
+import GreetTest from './components/GreetTest'
+import ModelViewer from './pages/model-viewer'
+import 'antd/dist/antd.css'
+import './App.css'
 
-const { TabPane } = Tabs;
-function App() {
+const { TabPane } = Tabs
+function App () {
   return (
     <Tabs defaultActiveKey="2" type="card">
       <TabPane tab="Tab 1" key="1">
@@ -19,7 +19,7 @@ function App() {
       </TabPane>
     </Tabs>
 
-  );
+  )
 }
 
-export default App;
+export default App
