@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 function ModelScene (params) {
   const ref = useRef()
@@ -14,12 +15,15 @@ function ModelScene (params) {
     ref.current.appendChild(renderer.domElement)
     renderer.domElement.style = 'margin:auto;'
 
+    const orbit = new OrbitControls(camera, renderer.domElement)
+
     const geometry = new THREE.BoxGeometry()
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
     const cube = new THREE.Mesh(geometry, material)
     scene.add(cube)
 
     camera.position.z = 5
+    orbit.update()
     let animationFrameFlag = null
     const animate = function () {
       animationFrameFlag = requestAnimationFrame(animate)
@@ -38,7 +42,9 @@ function ModelScene (params) {
   })
 
   return (
-    <div ref={ref} className="flex"/>
+
+    <div ref={ref} className="flex">
+    </div>
   )
 }
 
