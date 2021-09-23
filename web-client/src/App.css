@@ -40,3 +40,7 @@
 .flex{
   display: flex;
 }
+
+.absolute{
+  position: absolute;
+}
