@@ -57,4 +57,10 @@ export function frameTargetView (target, camera, orbit) {
     orbit.target.copy(target.position)
     orbit.update()
   }
+
+  return {
+    distance: distance,
+    box: box,
+    center: center
+  }
 }

@@ -5,6 +5,10 @@ import {
   loadGlb,
   frameTargetView
 } from '../../../utils/threejs-utils.js'
+import { message } from 'antd'
+
+import LeftBlock from './LeftBlock.js'
+import RightBlock from './RightBlock.js'
 
 import './ModelScene.css'
 
@@ -43,6 +47,7 @@ function ModelScene (params) {
     return () => {
       // TODO：释放资源
       cancelAnimationFrame(animationFrameFlag)
+      renderer.domElement.remove()
     }
   })
 
@@ -60,7 +65,7 @@ function ModelScene (params) {
           window.URL.revokeObjectURL(url)
         })
       } else {
-        console.warn('单个模型文件应为glb格式。')
+        message.warn('单个模型文件应为glb格式。')
       }
       // TODO: 支持gltf多文件
     }
@@ -69,12 +74,11 @@ function ModelScene (params) {
 
   return (
 
-    <div ref={ref} className="flex">
-      {/* TODO：研究选择gltf多个文件的问题,.bin,png，jpg等等 */}
-      <div className="upload-container">
-        <div>PS：只支持gltf/glb文件</div>
-        <input type="file" multiple onChange={uploadChange}></input>
-      </div>
+    <div className="flex">
+      <LeftBlock uploadChange={uploadChange} />
+      {/* 中间插入3D场景 */}
+      <div ref={ref} className="flex-1"></div>
+      <RightBlock/>
     </div>
   )
 }
