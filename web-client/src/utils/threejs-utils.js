@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
+import { LoadingManager } from 'three'
 
 /**
  * 清除场景里所有物体
@@ -14,18 +15,39 @@ export function clearScene (scene) {
   return scene
 }
 
+class CustomLoadingManager extends LoadingManager {
+  constructor (manager) {
+    super(manager)
+    // console.log('CustomLoadingManager constructor', manager)
+    this.setURLModifier(this.setURLModifierFun)
+    this.onStart = this.onStartFun
+  }
+
+  setURLModifierFun (url) {
+    console.log('setURLModifier2', url)
+    // TODO: blob要处理
+    return url
+  }
+
+  onStartFun (url, itemsLoaded, itemsTotal) {
+    console.log('onStartFun', url, itemsLoaded, itemsTotal)
+  }
+}
+
 /**
- * 加载单个glb文件模型
+ * 加载gltf/glb文件模型
  * @param  {THREE.Scene} scene
  * @param  {} url
  */
-export function loadGlb (scene, url) {
-  const loader = new GLTFLoader()
+export function loadGLTF (scene, url) {
+  const loader = new GLTFLoader(new CustomLoadingManager())
   return new Promise((resolve, reject) => {
     loader.load(url, function (gltf) {
       clearScene(scene)
       // console.log('load gltf file:', gltf)
-
+      // TODO:测量加载文件的变化
+      // https://developer.mozilla.org/en-US/docs/Web/API/Resource_Timing_API/Using_the_Resource_Timing_API
+      // performance.getEntriesByType("resource")
       scene.add(gltf.scene)
       // TODO: 调整灯光
       const light = new THREE.HemisphereLight(0xffffff, 0xcccccc, 1)

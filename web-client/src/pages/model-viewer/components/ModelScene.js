@@ -2,25 +2,32 @@ import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import {
-  loadGlb,
+  loadGLTF,
   frameTargetView
 } from '../../../utils/threejs-utils.js'
+
 import { message } from 'antd'
+import eventBus from '../../../utils/event-bus'
 
-import LeftBlock from './LeftBlock.js'
+import UploadBlock from './UploadBlock.js'
 import RightBlock from './RightBlock.js'
-
+// BUG:发现把摄像头位置打出来，会有大量的 js event listener不断地增加，估计是生渲染次数太多导致的问题。
+// TODO:有空再研究解决
+// import CameraInfo from './CameraInfo'
+import ViewInfo from './ViewInfo.js'
 import './ModelScene.css'
 
 function ModelScene (params) {
+  console.log('ModelScene')
   const ref = useRef()
   const [viewInfo, setViewInfo] = useState({})
   const [scene, setScene] = useState()
   const [camera, setCamera] = useState()
   const [orbit, setOrbit] = useState()
-  const [cameraPositionInfo, setCameraPositionInfo] = useState()
+  // const [cameraPositionInfo, setCameraPositionInfo] = useState()
 
   useEffect(() => {
+    console.log('ModelScene useEffect')
     const scene = new THREE.Scene()
     setScene(scene)
     // TODO:背景色可调整
@@ -37,7 +44,7 @@ function ModelScene (params) {
     renderer.setSize(window.innerWidth / 2, window.innerHeight / 2)
     ref.current.appendChild(renderer.domElement)
 
-    loadGlb(scene, '/model/computer.glb').then(() => {
+    loadGLTF(scene, '/model/gltf-separate/computer.gltf').then(() => {
       const viewInfo = frameTargetView(scene, camera, orbit)
       setViewInfo(viewInfo)
     })
@@ -48,7 +55,8 @@ function ModelScene (params) {
     const animate = function () {
       animationFrameFlag = requestAnimationFrame(animate)
       orbit.update()
-      setCameraPositionInfo({ ...camera.position })
+      // setCameraPositionInfo({ ...camera.position })
+      eventBus.emit('3d-animate')
       renderer.render(scene, camera)
     }
 
@@ -65,27 +73,31 @@ function ModelScene (params) {
     const files = target.files
     if (files.length === 1) {
       const url = window.URL.createObjectURL(files[0])
-      // console.log('change to url', url)
 
-      if (files[0].name.includes('.glb')) {
-        loadGlb(scene, url).then(() => {
-          // frameTargetView(scene, camera, orbit)
+      if (files[0].name.includes('.glb') || files[0].name.includes('.gltf')) {
+        loadGLTF(scene, url).then(() => {
           window.URL.revokeObjectURL(url)
           const viewInfo = frameTargetView(scene, camera, orbit)
           setViewInfo(viewInfo)
         })
       } else {
-        message.warn('单个模型文件应为glb格式。')
+        message.warn('模型文件应为gltf/glb格式。')
       }
-      // TODO: 支持gltf多文件
     }
     // console.log('uploadChange', target, files)
   }
 
+  console.log('uploadChange', scene, camera, orbit, message)
+
   return (
 
     <div className="flex">
-      <LeftBlock uploadChange={uploadChange} viewInfo={viewInfo} cameraPositionInfo={cameraPositionInfo}/>
+      <div className="flex-1">
+        <UploadBlock uploadChange={uploadChange} />
+        <ViewInfo viewInfo={viewInfo} />
+        {/* <CameraInfo camera={camera}/> */}
+      </div>
+
       {/* 中间插入3D场景 */}
       <div ref={ref} className="flex-1"></div>
       <RightBlock/>
