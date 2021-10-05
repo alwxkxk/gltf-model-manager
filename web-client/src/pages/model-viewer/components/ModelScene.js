@@ -4,10 +4,10 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import {
   loadGLTF,
   frameTargetView
-} from '../../../utils/threejs-utils.js'
+} from '@/utils/threejs-utils.js'
 
 import { message } from 'antd'
-import eventBus from '../../../utils/event-bus'
+import eventBus from '@/utils/event-bus'
 
 import UploadBlock from './UploadBlock.js'
 import RightBlock from './RightBlock.js'

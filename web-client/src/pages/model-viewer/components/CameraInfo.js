@@ -1,5 +1,5 @@
 
-import eventBus from '../../../utils/event-bus'
+import eventBus from '@/utils/event-bus'
 import { useEffect, useState } from 'react'
 /**
  * @param  {THREE.Camera} params.camera 摄像头对象
