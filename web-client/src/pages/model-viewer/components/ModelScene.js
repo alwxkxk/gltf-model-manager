@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import {
   loadGLTF,
+  localLoadSeparateGLTF,
   frameTargetView
 } from '@/utils/threejs-utils.js'
 
@@ -18,7 +19,6 @@ import ViewInfo from './ViewInfo.js'
 import './ModelScene.css'
 
 function ModelScene (params) {
-  console.log('ModelScene')
   const ref = useRef()
   const [viewInfo, setViewInfo] = useState({})
   const [scene, setScene] = useState()
@@ -27,7 +27,6 @@ function ModelScene (params) {
   // const [cameraPositionInfo, setCameraPositionInfo] = useState()
 
   useEffect(() => {
-    console.log('ModelScene useEffect')
     const scene = new THREE.Scene()
     setScene(scene)
     // TODO:背景色可调整
@@ -72,9 +71,8 @@ function ModelScene (params) {
     const target = event.target
     const files = target.files
     if (files.length === 1) {
-      const url = window.URL.createObjectURL(files[0])
-
       if (files[0].name.includes('.glb') || files[0].name.includes('.gltf')) {
+        const url = window.URL.createObjectURL(files[0])
         loadGLTF(scene, url).then(() => {
           window.URL.revokeObjectURL(url)
           const viewInfo = frameTargetView(scene, camera, orbit)
@@ -83,11 +81,13 @@ function ModelScene (params) {
       } else {
         message.warn('模型文件应为gltf/glb格式。')
       }
+    } else {
+      console.log('本地选择多文件：', files)
+      localLoadSeparateGLTF(scene, Array.from(files)).catch(errorMsg => {
+        message.warn(errorMsg)
+      })
     }
-    // console.log('uploadChange', target, files)
   }
-
-  console.log('uploadChange', scene, camera, orbit, message)
 
   return (
 
