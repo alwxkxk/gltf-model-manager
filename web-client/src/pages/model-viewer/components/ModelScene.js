@@ -37,8 +37,8 @@ function ModelScene (params) {
     const orbit = new OrbitControls(camera, renderer.domElement)
     setOrbit(orbit)
 
-    orbit.autoRotate = true
-    orbit.autoRotateSpeed = 2
+    // orbit.autoRotate = true
+    // orbit.autoRotateSpeed = 2
 
     renderer.setSize(window.innerWidth / 2, window.innerHeight / 2)
     ref.current.appendChild(renderer.domElement)
@@ -100,7 +100,7 @@ function ModelScene (params) {
 
       {/* 中间插入3D场景 */}
       <div ref={ref} className="flex-1"></div>
-      <RightBlock/>
+      <RightBlock scene={scene} />
     </div>
   )
 }

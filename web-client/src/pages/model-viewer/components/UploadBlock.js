@@ -6,7 +6,6 @@ import { useState } from 'react'
  * @param  {Function} params.uploadChange 选择文件后的触发函数
  */
 function LeftBlock (params) {
-  console.log('LeftBlock')
   const [fileNameList, setFileNameList] = useState([])
   const [fileSize, setFileSize] = useState(0)
 
