@@ -12,9 +12,6 @@ import eventBus from '@/utils/event-bus'
 
 import UploadBlock from './UploadBlock.js'
 import RightBlock from './RightBlock.js'
-// BUG:发现把摄像头位置打出来，会有大量的 js event listener不断地增加，估计是生渲染次数太多导致的问题。
-// TODO:有空再研究解决
-// import CameraInfo from './CameraInfo'
 import ViewInfo from './ViewInfo.js'
 import './ModelScene.css'
 
@@ -95,7 +92,6 @@ function ModelScene (params) {
       <div className="flex-1">
         <UploadBlock uploadChange={uploadChange} />
         <ViewInfo viewInfo={viewInfo} />
-        {/* <CameraInfo camera={camera}/> */}
       </div>
 
       {/* 中间插入3D场景 */}
