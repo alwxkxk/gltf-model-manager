@@ -23,12 +23,17 @@ import {
   gtReadSeparateGltf
 } from '@/utils/gltf-transform-utils.js'
 
+import { inspect } from '@gltf-transform/functions'
+import InspectList from './InspectList.js'
+
 function ModelScene (params) {
   const ref = useRef()
   const [viewInfo, setViewInfo] = useState({})
   const [scene, setScene] = useState()
   const [camera, setCamera] = useState()
   const [orbit, setOrbit] = useState()
+  const [inspectObj, setInspectObj] = useState([])
+
   // const [cameraPositionInfo, setCameraPositionInfo] = useState()
 
   useEffect(() => {
@@ -82,11 +87,13 @@ function ModelScene (params) {
           if (files[0].name.includes('.glb')) {
             gtReadGlb(files[0]).then(doc => {
               console.log('gtReadGlb', doc, doc.getRoot().listTextures())
+              setInspectObj(inspect(doc))
             })
           } else if (files[0].name.includes('.gltf')) {
             // console.log('提示：单个gltf文件加载，如果是gltf separate文件会导致无法加载其它资源。')
             gtReadGltf(url).then(doc => {
               console.log('gtReadGltf', doc, doc.getRoot().listTextures())
+              setInspectObj(inspect(doc))
             })
           }
 
@@ -133,6 +140,7 @@ function ModelScene (params) {
 
         const p2 = gtReadSeparateGltf(rootFileUrl, filesBufferMap).then(doc => {
           console.log('gtReadSeparateGltf', doc, doc.getRoot().listTextures())
+          setInspectObj(inspect(doc))
         })
 
         Promise.all([p1, p2]).then(() => {
@@ -152,16 +160,22 @@ function ModelScene (params) {
 
   return (
 
-    <div className="flex">
-      <div className="flex-1">
-        <UploadBlock uploadChange={uploadChange} />
-        <ViewInfo viewInfo={viewInfo} />
+    <div>
+      <div className="flex">
+        <div className="flex-1">
+          <UploadBlock uploadChange={uploadChange} />
+          <ViewInfo viewInfo={viewInfo} />
+        </div>
+
+        {/* 中间插入3D场景 */}
+        <div ref={ref} className="flex-1"></div>
+        <RightBlock scene={scene} />
       </div>
 
-      {/* 中间插入3D场景 */}
-      <div ref={ref} className="flex-1"></div>
-      <RightBlock scene={scene} />
+      <InspectList data={inspectObj}/>
+
     </div>
+
   )
 }
 

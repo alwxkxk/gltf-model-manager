@@ -16,3 +16,14 @@ export function generateFilesMap (files) {
     return { filesUrlMap, filesBufferMap }
   })
 }
+
+export function transformFileSize (val) {
+  let flag = 'KB'
+  let result = val / 1024
+
+  if (result > 1024) {
+    result = result / 1024
+    flag = 'MB'
+  }
+  return `${result.toFixed(2)}${flag}`
+}
