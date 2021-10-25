@@ -5,7 +5,7 @@
 - UI库：[antd](https://ant.design/components/message-cn/)
 - 颜色选择器：[react-color](https://casesandberg.github.io/react-color/#api)
 - 3D库：[three.js](https://threejs.org/)
-
+- [gltf-transform](https://gltf-transform.donmccurdy.com/)
 ## 类似参考
 - [three-gltf-viewer](https://github.com/donmccurdy/three-gltf-viewer)
 

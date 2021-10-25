@@ -65,7 +65,15 @@ export function loadGLTF (scene, url) {
       const light = new THREE.HemisphereLight(0xffffff, 0xcccccc, 1)
       scene.add(light)
       resolve()
-    })
+    }, null, reject)
+  }).catch(err => {
+    let errMessage = '加载模型失败:'
+    if (err.message.includes('Failed to load buffer')) {
+      errMessage += '单个gltf文件加载，如果是gltf separate文件会导致无法加载其它资源。'
+      console.warn('提示：单个gltf文件加载，如果是gltf separate文件会导致无法加载其它资源。')
+    }
+    // console.log('errMessage', errMessage)
+    return Promise.reject(new Error(errMessage))
   })
 }
 /**
@@ -74,44 +82,13 @@ export function loadGLTF (scene, url) {
  * @param  {Array[File]} filesList
  */
 
-export function localLoadSeparateGLTF (scene, filesList) {
-  let rootFile = null
-  const fileMap = new Map()
-  let errorMsg = null
-  filesList.forEach(file => {
-    if (file.name.includes('.gltf')) {
-      if (!rootFile) {
-        rootFile = file.name
-      } else {
-        // 存在多个gltf文件
-        errorMsg = '文件夹里不允许存在多个gltf文件'
-      }
-    }
-    fileMap.set(file.name, window.URL.createObjectURL(file))
-  })
-
-  if (!rootFile) {
-    errorMsg = '没找到gltf文件'
-  }
-
-  if (errorMsg) {
-    return Promise.reject(errorMsg)
-  }
-
-  const dispose = () => {
-    // 释放
-    fileMap.values(v => {
-      window.URL.revokeObjectURL(v)
-    })
-    fileMap.clear()
-  }
-
+export function localLoadSeparateGLTF (scene, rootFileUrl, filesUrlMap) {
   const customLoadingManager = new CustomLoadingManager()
-  customLoadingManager.setFileMap(fileMap)
+  customLoadingManager.setFileMap(filesUrlMap)
 
   const loader = new GLTFLoader(customLoadingManager)
   return new Promise((resolve, reject) => {
-    loader.load(fileMap.get(rootFile), function (gltf) {
+    loader.load(rootFileUrl, function (gltf) {
       clearScene(scene)
       // console.log('load gltf file:', gltf)
       // NOTE:可能后面改用 测量加载文件的变化
@@ -121,7 +98,6 @@ export function localLoadSeparateGLTF (scene, filesList) {
       // TODO: 调整灯光
       const light = new THREE.HemisphereLight(0xffffff, 0xcccccc, 1)
       scene.add(light)
-      dispose()
       resolve()
     })
   })
