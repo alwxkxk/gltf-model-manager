@@ -1,6 +1,8 @@
-package com.alwxkxk.server;
+package com.alwxkxk.server.controller;
 
 import java.util.concurrent.atomic.AtomicLong;
+
+import com.alwxkxk.server.entity.Greeting;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

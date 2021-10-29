@@ -1,4 +1,4 @@
-package com.alwxkxk.server;
+package com.alwxkxk.server.entity;
 
 public class Greeting {
     private final long id;
