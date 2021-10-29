@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class FileSystemStorageService implements StorageService {
 
@@ -99,7 +101,10 @@ public class FileSystemStorageService implements StorageService {
 	@Override
 	public void init() {
 		try {
-			Files.createDirectories(rootLocation);
+            if(!Files.isDirectory(rootLocation)){
+                log.info( String.format("create upload directory: %s", rootLocation));
+			    Files.createDirectories(rootLocation);
+            }
 		}
 		catch (IOException e) {
 			throw new StorageException("Could not initialize storage", e);

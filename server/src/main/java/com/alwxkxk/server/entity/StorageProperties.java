@@ -1,6 +1,9 @@
 package com.alwxkxk.server.entity;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import lombok.Data;
+
+@Data
 @ConfigurationProperties("storage")
 public class StorageProperties {
 
@@ -8,13 +11,5 @@ public class StorageProperties {
 	 * Folder location for storing files
 	 */
 	private String location;
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
 
 }
