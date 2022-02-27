@@ -11,38 +11,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+// TODO:数据库查表存表
 // TODO:做一个统一的返回接口
 
 @RestController
-public class FileUploadController {
+@RequestMapping("/file")
+public class FileController {
 
 	private final StorageService storageService;
 
 	@Autowired
-	public FileUploadController(StorageService storageService) {
+	public FileController(StorageService storageService) {
 		this.storageService = storageService;
 	}
 
-	@GetMapping("/")
+	@GetMapping("/list")
 	public List<String> listUploadedFiles() throws IOException {
         return storageService.loadAll().map(
-            path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+            path -> MvcUriComponentsBuilder.fromMethodName(FileController.class,
                     "serveFile", path.getFileName().toString()).build().toUri().toString())
             .collect(Collectors.toList());
 	}
 
-	@GetMapping("/files/{filename:.+}")
+	@GetMapping("/{filename:.+}")
 	@ResponseBody
 	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
 
