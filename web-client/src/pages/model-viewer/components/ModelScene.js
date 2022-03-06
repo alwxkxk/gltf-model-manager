@@ -52,9 +52,18 @@ function ModelScene (params) {
     renderer.setSize(window.innerWidth / 2, window.innerHeight / 2)
     ref.current.appendChild(renderer.domElement)
 
-    loadGLTF(scene, '/model/gltf-separate/computer.gltf').then(() => {
+    loadGLTF(scene, '/model/gltf-separate/computer.gltf').then((res) => {
       const viewInfo = frameTargetView(scene, camera, orbit)
       setViewInfo(viewInfo)
+    })
+
+    window.requestIdleCallback(() => {
+      // NOTE:临时测试
+      const obj = {}
+      for (let index = 0; index < 10; index++) {
+        obj[index] = Math.random()
+      }
+      eventBus.emit('file-change', [new File([JSON.stringify(obj)], 'test.json', { type: 'application/json' })])
     })
 
     camera.position.z = 5

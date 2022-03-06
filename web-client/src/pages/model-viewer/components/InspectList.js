@@ -125,7 +125,7 @@ function InspectList (params) {
   let meshesData = []
   if (params.data) {
     const dataObj = params.data
-    console.log('InspectList:', dataObj)
+    // console.log('InspectList:', dataObj)
     if (dataObj.textures && dataObj.textures.properties) {
       textureData = refactorProperties(dataObj.textures.properties)
     }

@@ -9,3 +9,7 @@
 ## 类似参考
 - [three-gltf-viewer](https://github.com/donmccurdy/three-gltf-viewer)
 
+## 业务逻辑
+- 网页选择glb/gltf模型后，显示模型相关信息。
+- 上传后端处理，websocket返回处理进度，返回处理后的文件信息，提示hash值以及是否有冲突的图片。
+
