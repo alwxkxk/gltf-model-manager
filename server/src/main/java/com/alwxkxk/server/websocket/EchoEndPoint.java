@@ -8,7 +8,9 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @ServerEndpoint("/echo")
 @Component
 /**
@@ -17,12 +19,12 @@ import java.io.IOException;
 public class EchoEndPoint {
     @OnOpen
     public void onOpen(Session session) {
-        System.out.println("ws 连接成功");
+        log.info("ws 连接成功");
     }
 
     @OnClose
     public void onClose(Session session) {
-        System.out.println("ws 连接关闭");
+        log.info("ws 连接关闭");
     }
 
     @OnMessage

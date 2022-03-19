@@ -5,28 +5,27 @@ import { Button } from 'antd'
 function ServerHandle (params) {
   const [fileNameList, setFileNameList] = useState([])
   const [files, setFiles] = useState([])
+  const [ws, setWs] = useState({})
 
   const uploadHandle = () => {
-    // TODO: 建立 websocket。
+    // 建立 websocket。
     console.log('uploadHandle files', files)
-    const ws = new WebSocket(`${process.env.REACT_APP_WS_URL}/file`)
-    ws.onopen = () => {
-      ws.send(JSON.stringify({ number: files.length }))
-      files.forEach(file => {
-        window.requestIdleCallback(() => {
-          file.arrayBuffer().then(buf => {
-            ws.send(buf)
-          })
+    // TODO:先检测文件是否超出最大 大小。
+
+    Array.from(files).forEach(file => {
+      window.requestIdleCallback(() => {
+        ws.send(JSON.stringify({ type: 'fileName', value: file.name }))
+        file.arrayBuffer().then(buf => {
+          ws.send(buf)
         })
       })
-
-      const blob = new Blob([JSON.stringify({ test: 123 })], { type: 'application/octet-stream' })
-      ws.send(blob)
-    }
+    })
   }
 
   // 只初始化一次
   useEffect(() => {
+    const ws = new WebSocket(`${process.env.REACT_APP_WS_URL}/file`)
+    setWs(ws)
     const changeFile = (files) => {
       console.log('ServerHandle changeFile', files)
       const fileNameList = Array.from(files).map(file => {

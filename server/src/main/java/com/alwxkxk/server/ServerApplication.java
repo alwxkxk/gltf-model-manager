@@ -30,7 +30,6 @@ public class ServerApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				// System.out.println(env.getProperty("client.url"));
 				registry.addMapping("/**").allowedOrigins(env.getProperty("client.url"));
 			}
 		};
