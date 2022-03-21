@@ -11,13 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,26 +50,6 @@ public class FileSystemStorageService implements StorageService {
         } catch (IOException e) {
             throw new StorageException("Failed to store file.", e);
         }
-    }
-
-    /**
-     * websocket ByteBuffer 数据 保存成文件
-     *
-     * @param fileName 文件名
-     * @param byteBuf  字符
-     */
-    public void store(String fileName, ByteBuffer byteBuf) {
-        File file = new File(locationString + "/" + fileName);
-        try {
-            FileChannel wChannel = new FileOutputStream(file).getChannel();
-            wChannel.write(byteBuf);
-            wChannel.close();
-            log.info("store success!");
-        } catch (Exception e) {
-            log.error(String.valueOf(e));
-        }
-
-
     }
 
     @Override

@@ -1,12 +1,8 @@
 package com.alwxkxk.server.controller;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.alwxkxk.server.entity.StorageFileNotFoundException;
 import com.alwxkxk.server.service.StorageService;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -14,11 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 // TODO:数据库查表存表
 // TODO:做一个统一的返回接口
-
+@Slf4j
 @RestController
 @RequestMapping("/file")
 public class FileController {
@@ -31,11 +30,12 @@ public class FileController {
 	}
 
 	@GetMapping("/list")
-	public List<String> listUploadedFiles() throws IOException {
-        return storageService.loadAll().map(
+	public ResponseEntity listUploadedFiles() throws IOException {
+		List<String> body =  storageService.loadAll().map(
             path -> MvcUriComponentsBuilder.fromMethodName(FileController.class,
                     "serveFile", path.getFileName().toString()).build().toUri().toString())
             .collect(Collectors.toList());
+		return ResponseEntity.ok().body(body);
 	}
 
 	@GetMapping("/{filename:.+}")
@@ -47,18 +47,15 @@ public class FileController {
 				"attachment; filename=\"" + file.getFilename() + "\"").body(file);
 	}
 
-	@PostMapping("/")
-	public String handleFileUpload(@RequestParam("file") MultipartFile file,
-			RedirectAttributes redirectAttributes) {
-
+	@PostMapping()
+	public ResponseEntity handleFileUpload(@RequestParam("file") MultipartFile file) {
 		storageService.store(file);
-		redirectAttributes.addFlashAttribute("message",
-				"You successfully uploaded " + file.getOriginalFilename() + "!");
-        return "上传成功";
+		return ResponseEntity.ok().body("上传成功");
 	}
 
 	@ExceptionHandler(StorageFileNotFoundException.class)
 	public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
+		log.error("handleStorageFileNotFound.");
 		return ResponseEntity.notFound().build();
 	}
 
