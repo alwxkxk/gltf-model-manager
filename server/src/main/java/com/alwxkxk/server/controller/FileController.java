@@ -47,9 +47,19 @@ public class FileController {
 				"attachment; filename=\"" + file.getFilename() + "\"").body(file);
 	}
 
+//	@PostMapping()
+//	public ResponseEntity handleFileUpload(@RequestParam("file") MultipartFile file) {
+//		storageService.store(file);
+//		return ResponseEntity.ok().body("上传成功");
+//	}
+
 	@PostMapping()
-	public ResponseEntity handleFileUpload(@RequestParam("file") MultipartFile file) {
-		storageService.store(file);
+	public ResponseEntity handleFileUpload(
+			@RequestParam("file") MultipartFile file,
+			@RequestParam("fileName") String fileName,
+			@RequestParam("dirName") String dirName
+	) {
+		storageService.store(file,fileName,dirName);
 		return ResponseEntity.ok().body("上传成功");
 	}
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -47,6 +48,32 @@ public class FileSystemStorageService implements StorageService {
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
             }
+        } catch (IOException e) {
+            throw new StorageException("Failed to store file.", e);
+        }
+    }
+
+    @Override
+    public void store(MultipartFile file, String fileName, String dirName) {
+        try {
+            if (file.isEmpty()) {
+                throw new StorageException("Failed to store empty file.");
+            }
+            Path destinationDir = this.rootLocation.resolve(Paths.get(dirName)).normalize().toAbsolutePath();
+            //若文件夹不存在，就创建。注意若多个进程创建，则会导致因为重复创建导致后面的进程创建失败
+            if(!Files.exists(destinationDir)){
+                File f = new File(destinationDir.toString());
+                if (f.mkdir() != true) {
+                    throw new StorageException("Failed to create directory.");
+                }
+            }
+            // specify an abstract pathname in the File object
+            Path destinationFile = destinationDir.resolve(Paths.get(fileName)).normalize().toAbsolutePath();
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
+            }
+
         } catch (IOException e) {
             throw new StorageException("Failed to store file.", e);
         }

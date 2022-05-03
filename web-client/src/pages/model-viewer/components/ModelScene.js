@@ -10,7 +10,10 @@ import {
   generateFilesMap
 } from '@/utils/utils.js'
 
-import { message } from 'antd'
+import {
+  message,
+  Divider
+} from 'antd'
 import eventBus from '@/utils/event-bus'
 
 import UploadBlock from './UploadBlock.js'
@@ -20,7 +23,8 @@ import './ModelScene.css'
 import {
   gtReadGlb,
   gtReadGltf,
-  gtReadSeparateGltf
+  gtReadSeparateGltf,
+  gtWriteToSeparateGltf
 } from '@/utils/gltf-transform-utils.js'
 
 import { inspect } from '@gltf-transform/functions'
@@ -51,20 +55,20 @@ function ModelScene (params) {
 
     renderer.setSize(window.innerWidth / 2, window.innerHeight / 2)
     ref.current.appendChild(renderer.domElement)
-
+    // 默认加载指定模型
     loadGLTF(scene, '/model/gltf-separate/computer.gltf').then((res) => {
       const viewInfo = frameTargetView(scene, camera, orbit)
       setViewInfo(viewInfo)
     })
 
-    window.requestIdleCallback(() => {
-      // NOTE:临时测试
-      const obj = {}
-      for (let index = 0; index < 10; index++) {
-        obj[index] = Math.random()
-      }
-      eventBus.emit('file-change', [new File([JSON.stringify(obj)], 'test.json', { type: 'application/json' })])
-    })
+    // // NOTE:临时测试
+    // window.requestIdleCallback(() => {
+    //   const obj = {}
+    //   for (let index = 0; index < 10; index++) {
+    //     obj[index] = Math.random()
+    //   }
+    //   eventBus.emit('file-change', [new File([JSON.stringify(obj)], 'test.json', { type: 'application/json' })])
+    // })
 
     camera.position.z = 5
     orbit.update()
@@ -97,6 +101,8 @@ function ModelScene (params) {
             gtReadGlb(files[0]).then(doc => {
               console.log('gtReadGlb', doc, doc.getRoot().listTextures())
               setInspectObj(inspect(doc))
+              const fileListObj = gtWriteToSeparateGltf(doc)
+              eventBus.emit('file-change', fileListObj)
             })
           } else if (files[0].name.includes('.gltf')) {
             // console.log('提示：单个gltf文件加载，如果是gltf separate文件会导致无法加载其它资源。')
@@ -173,6 +179,7 @@ function ModelScene (params) {
       <div className="flex">
         <div className="flex-1">
           <UploadBlock uploadChange={uploadChange} />
+          <Divider />
           <ViewInfo viewInfo={viewInfo} />
         </div>
 

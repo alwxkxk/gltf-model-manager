@@ -1,7 +1,7 @@
 // import './LeftBlock.css'
 
 import { useState } from 'react'
-import eventBus from '@/utils/event-bus'
+// import eventBus from '@/utils/event-bus'
 
 /**
  * @param  {Function} params.uploadChange 选择文件后的触发函数
@@ -21,7 +21,7 @@ function LeftBlock (params) {
     })
     setFileNameList(fileNameList)
     setFileSize(fileSize)
-    eventBus.emit('file-change', files)
+    // eventBus.emit('file-change', files)
 
     if (params.uploadChange) {
       params.uploadChange(event)
