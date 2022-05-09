@@ -1,4 +1,3 @@
-// import './LeftBlock.css'
 
 import { useState } from 'react'
 // import eventBus from '@/utils/event-bus'
@@ -14,13 +13,13 @@ function LeftBlock (params) {
     // 读取文件信息
     const target = event.target
     const files = target.files
-    let fileSize = 0
-    const fileNameList = Array.from(files).map(file => {
-      fileSize += file.size
+    let fileSizeTemp = 0
+    const fileNameListTemp = Array.from(files).map(file => {
+      fileSizeTemp += file.size
       return file.name
     })
-    setFileNameList(fileNameList)
-    setFileSize(fileSize)
+    setFileNameList(fileNameListTemp)
+    setFileSize(fileSizeTemp)
     // eventBus.emit('file-change', files)
 
     if (params.uploadChange) {

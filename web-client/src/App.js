@@ -1,5 +1,4 @@
 import { Tabs } from 'antd'
-// import GreetTest from './components/GreetTest'
 import ModelViewer from './pages/model-viewer'
 import ServerHandle from './pages/server-handle'
 import 'antd/dist/antd.css'

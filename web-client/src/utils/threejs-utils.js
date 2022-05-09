@@ -7,11 +7,10 @@ import { LoadingManager } from 'three'
  * @param  {THREE.Scene} scene
  */
 export function clearScene (scene) {
-  let children = [...scene.children]
+  const children = [...scene.children]
   children.forEach(c => {
     scene.remove(c)
   })
-  children = null
   return scene
 }
 
@@ -54,7 +53,7 @@ class CustomLoadingManager extends LoadingManager {
 export function loadGLTF (scene, url) {
   const loader = new GLTFLoader()
   return new Promise((resolve, reject) => {
-    loader.load(url, function (gltf) {
+    loader.load(url, (gltf) => {
       clearScene(scene)
       // console.log('load gltf file:', gltf)
       // TODO:测量加载文件的变化
@@ -88,7 +87,7 @@ export function localLoadSeparateGLTF (scene, rootFileUrl, filesUrlMap) {
 
   const loader = new GLTFLoader(customLoadingManager)
   return new Promise((resolve, reject) => {
-    loader.load(rootFileUrl, function (gltf) {
+    loader.load(rootFileUrl, (gltf) => {
       clearScene(scene)
       // console.log('load gltf file:', gltf)
       // NOTE:可能后面改用 测量加载文件的变化

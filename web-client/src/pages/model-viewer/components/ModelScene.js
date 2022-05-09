@@ -41,14 +41,11 @@ function ModelScene (params) {
   // const [cameraPositionInfo, setCameraPositionInfo] = useState()
 
   useEffect(() => {
-    const scene = new THREE.Scene()
-    setScene(scene)
+    setScene(new THREE.Scene())
     scene.background = new THREE.Color('#ccc')
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-    setCamera(camera)
+    setCamera(new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000))
     const renderer = new THREE.WebGLRenderer()
-    const orbit = new OrbitControls(camera, renderer.domElement)
-    setOrbit(orbit)
+    setOrbit(new OrbitControls(camera, renderer.domElement))
 
     // orbit.autoRotate = true
     // orbit.autoRotateSpeed = 2
@@ -56,9 +53,8 @@ function ModelScene (params) {
     renderer.setSize(window.innerWidth / 2, window.innerHeight / 2)
     ref.current.appendChild(renderer.domElement)
     // 默认加载指定模型
-    loadGLTF(scene, '/model/gltf-separate/computer.gltf').then((res) => {
-      const viewInfo = frameTargetView(scene, camera, orbit)
-      setViewInfo(viewInfo)
+    loadGLTF(scene, '/model/gltf-separate/computer.gltf').then(() => {
+      setViewInfo(frameTargetView(scene, camera, orbit))
     })
 
     // // NOTE:临时测试
@@ -112,8 +108,7 @@ function ModelScene (params) {
             })
           }
 
-          const viewInfo = frameTargetView(scene, camera, orbit)
-          setViewInfo(viewInfo)
+          setViewInfo(frameTargetView(scene, camera, orbit))
           window.URL.revokeObjectURL(url)
         }).catch(err => {
           message.warn(err.message)
@@ -159,8 +154,7 @@ function ModelScene (params) {
         })
 
         Promise.all([p1, p2]).then(() => {
-          const viewInfo = frameTargetView(scene, camera, orbit)
-          setViewInfo(viewInfo)
+          setViewInfo(frameTargetView(scene, camera, orbit))
 
           // 释放资源
           filesUrlMap.forEach(url => {

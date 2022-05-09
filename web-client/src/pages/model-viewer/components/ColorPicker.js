@@ -26,9 +26,9 @@ function ColorPicker (params) {
     setDisplayColorPicker(false)
   }
 
-  const handleChange = (color) => {
-    setColor({ ...color.rgb })
-    params.onChange(color)
+  const handleChange = (colorObj) => {
+    setColor({ ...colorObj.rgb })
+    params.onChange(colorObj)
   }
 
   const styles = reactCSS({
